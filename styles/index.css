@@ -20,6 +20,8 @@
   --transition-speed: 0.3s;
 
   --container-width: 970px;
+  --vw-padding: clamp(1rem, 5vw, 2rem);
+  --section-py: clamp(3rem, 10vw, 6.25rem);
 }
 
 /* base styles */
@@ -31,13 +33,16 @@
 
 html {
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
-   scrollbar-width: none;
+  scrollbar-width: none;
   -ms-overflow-style: none;
+  font-size: 100%;
 }
 
 html::-webkit-scrollbar {
-  display: none; /* Chrome, Safari and Opera */
+  display: none;
+  /* Chrome, Safari and Opera */
 }
 
 body {
@@ -89,6 +94,7 @@ ul {
 
 button {
   padding: 0;
+  font-family: inherit;
   cursor: pointer;
 }
 
@@ -108,20 +114,46 @@ main {
   border-width: 0;
 }
 
-/* --- LAYOUT UTILITIES --- */
+/* ---  LAYOUT & CONTAINER SYSTEM --- */
 
 .container {
   width: 100%;
   max-width: var(--container-width);
   margin: 0 auto;
-  /* Scroll margin accounts for the fixed or sticky header height when anchor linking */
-  scroll-margin-top: 12rem;
+  padding-inline: var(--vw-padding);
+  scroll-margin-top: calc(var(--header-height) + 4rem);
+  /* Establish a container query context for proportional scaling */
+  container-type: inline-size;
+}
+
+/* Container-Relative Fluid Typography */
+.container {
+  --font-xs: clamp(0.75rem, 1.5cqw, 0.875rem);
+  /* ~12px to 14px */
+  --font-sm: clamp(0.875rem, 2cqw, 1.125rem);
+  /* ~14px to 18px */
+  --font-m: clamp(1.5rem, 3.5cqw, 2.125rem);
+  /* ~24px to 34px */
+  --font-xl: clamp(2rem, 5cqw, 3rem);
+  /* ~32px to 48px */
+
+  /* Container-Relative Fluid Spacing Systems */
+  --gap-xs: clamp(0.5rem, 2cqw, 1.25rem);
+  /* ~8px to 20px */
+  --gap-sm: clamp(1rem, 3cqw, 1.875rem);
+  /* ~16px to 30px */
+  --gap-md: clamp(1.25rem, 5cqw, 3.125rem);
+  /* ~20px to 50px */
+  --gap-lg: clamp(1.5rem, 7cqw, 4.375rem);
+  /* ~24px to 70px */
+  --gap-xl: clamp(1.5rem, 10cqw, 6.0625rem);
+  /* ~24px to 97px */
 }
 
 .layout-container {
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: var(--gap-md);
 }
 
 .layout--center {
@@ -133,7 +165,8 @@ main {
 }
 
 .section {
-  padding: 100px 0;
+  padding-block: var(--section-py);
+  /* Scales up to 100px */
 }
 
 .section-accent {
@@ -160,24 +193,25 @@ main {
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 12px;
-
   width: 100%;
-  background-color: var(--light-bg-color);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  margin-bottom: clamp(6px, 1.2vw, 12px);
 }
 
 .nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 25px 0;
+  padding-block: clamp(15px, 2.5vw, 25px);
   border-bottom: 1px solid var(--gray-bg-color);
 }
 
 .nav-list {
   display: flex;
   justify-content: center;
-  gap: 40px;
+  gap: var(--gap-sm);
+  /* Scales up to 40px */
 }
 
 .nav-link {
@@ -186,49 +220,60 @@ main {
   transition: color var(--transition-speed);
 }
 
-.nav-link:hover {
+.nav-link:hover,
+.nav-link.active {
   color: var(--dark-text-color);
   font-size: var(--font-sm);
   cursor: pointer;
 }
 
-.active {
-  color: var(--dark-text-color);
-}
-
-/* HERO */
+/* HERO SECTION */
 .hero-title {
   font-size: var(--font-xl);
 }
 
 .hero-img {
   width: 100%;
-  height: 387px;
+  height: auto;
+  aspect-ratio: 970 / 387;
+  background-color: var(--medium-bg-color);
+
 }
 
-/* ABOUT */
+/* ABOUT ME SECTION */
 .about-content {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 30px;
-  max-width: 500px;
+  gap: var(--gap-sm);
+  /* Scales up to 30px */
+  max-width: clamp(300px, 50cqw, 500px);
   text-align: center;
 }
 
-/* SKILLS */
+/* Clean edge case fine-tuning for forced line breaks on small mobile */
+@media (max-width: 600px) {
+  .about-content br {
+    display: none;
+  }
+}
+
+/* SKILLS SECTION */
 .skills-intro {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: var(--gap-xs);
+  /* Scales up to 20px */
 }
 
 .skills-cards {
   display: flex;
-  align-items: center;
-  gap: 97px;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: var(--gap-xl);
+  /* Scales from 97px to ~24px */
   width: 100%;
 }
 
@@ -236,8 +281,11 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 60px;
+  justify-content: space-between;
+  gap: var(--gap-md);
+  /* Scales from 60px to ~20px */
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .skill {
@@ -245,7 +293,8 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 25px;
+  gap: var(--gap-sm);
+  /* Scales from 25px to ~16px */
 }
 
 .skill-title {
@@ -255,21 +304,32 @@ main {
   font-family: var(--font-family);
   font-weight: 700;
   letter-spacing: 0.02em;
+  line-height: 1.2;
+  word-break: break-word;
+  /* Prevents overflow */
+}
+
+/* Override hardcoded SVG sizes dynamically */
+.skill svg {
+  width: clamp(32px, 8.25cqw, 80px);
+  height: clamp(32px, 8.25cqw, 80px);
 }
 
 .skills-stars {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: clamp(2px, 1cqw, 10px);
 }
 
+/* Override hardcoded star sizes dynamically */
 .skills-stars svg {
   color: var(--star-color);
-  width: 26px;
-  height: 26px;
+  width: clamp(10px, 2.6cqw, 26px);
+  height: clamp(10px, 2.6cqw, 26px);
   display: block;
 }
+
 
 /* Зафарбовуємо відповідну кількість зірочок зліва направо, рахуючи <li> */
 .skills-stars[data-rating='2'] li:nth-child(-n + 2) svg,
@@ -279,17 +339,21 @@ main {
   color: var(--dark-bg-color);
 }
 
-/* PORTFOLIO */
+/* PORTFOLIO SECTION */
 
 .projects-list {
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 70px;
+  gap: var(--gap-lg);
+  /* Scales up to 70px */
 }
 
 .project-img {
-  margin-bottom: 40px;
+  margin-bottom: var(--gap-sm);
+  /* Scales up to 40px */
+  width: 100%;
+  ;
 }
 
 .project-figcaption {
@@ -301,17 +365,21 @@ main {
   text-decoration-skip-ink: none;
   text-align: center;
   color: var(--dark-text-color);
+  font-size: var(--font-sm);
 }
 
-/* CONTACTS */
+/* FOOTER & CONTACTS */
 
 .footer-intro {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 20px;
+  gap: var(--gap-xs);
+  /* Scales up to 20px */
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: var(--gap-md);
+  /* Scales up to 60px */
+  font-size: var(--font-sm);
 }
 
 .footer-social {
@@ -319,27 +387,54 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 30px;
-  margin-bottom: 60px;
+  gap: var(--gap-sm);
+  /* Scales up to 30px */
+  margin-bottom: var(--gap-md);
+  /* Scales up to 60px */
 }
 
 .footer-send-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 22px;
-  padding: 0px 16px;
-  width: 180px;
-  height: 44px;
+  border-radius: 999px;
+  /* Replaces hardcoded 22px to ensure perfect pills always */
+  width: clamp(140px, 18.5cqw, 180px);
+  height: clamp(38px, 4.5cqw, 44px);
   background-color: var(--dark-bg-color);
   color: var(--light-text-color);
+  font-size: var(--font-sm);
+  font-weight: 700;
+  transition: background-color var(--transition-speed), transform var(--transition-speed);
+}
+
+.footer-send-btn:hover {
+  background-color: var(--gray-bg-color);
+  transform: translateY(-2px);
 }
 
 .footer-social-links {
   display: flex;
   justify-content: center;
-  gap: 50px;
+  gap: var(--gap-md);
+  /* Scales up to 50px */
 }
+
+.footer-social-links a {
+  transition: transform var(--transition-speed), color var(--transition-speed);
+}
+
+.footer-social-links a:hover {
+  transform: scale(1.1);
+  color: var(--gray-bg-color);
+}
+
+/* Override hardcoded social SVG sizes dynamically */
+.footer-social-links svg {
+  width: clamp(26px, 4cqw, 40px);
+  height: clamp(26px, 4cqw, 40px);
+}
+
 
 .footer-copyright {
   font-size: var(--font-xs);
