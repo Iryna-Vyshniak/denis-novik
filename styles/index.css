@@ -217,14 +217,21 @@ main {
 .nav-link {
   color: var(--medium-text-color);
   font-size: var(--font-sm);
-  transition: color var(--transition-speed);
+  /* Use text-shadow instead of font-weight to prevent layout jumping */
+  transition:
+    color var(--transition-speed),
+    text-shadow var(--transition-speed);
 }
 
 .nav-link:hover,
+.nav-link:focus,
 .nav-link.active {
   color: var(--dark-text-color);
-  font-size: var(--font-sm);
   cursor: pointer;
+  /* Simulates font-weight: 700/800 without changing the width of the word */
+  text-shadow:
+    0 0 0.65px var(--dark-text-color),
+    0 0 0.65px var(--dark-text-color);
 }
 
 /* HERO SECTION */
@@ -237,7 +244,6 @@ main {
   height: auto;
   aspect-ratio: 970 / 387;
   background-color: var(--medium-bg-color);
-
 }
 
 /* ABOUT ME SECTION */
@@ -330,7 +336,6 @@ main {
   display: block;
 }
 
-
 /* Зафарбовуємо відповідну кількість зірочок зліва направо, рахуючи <li> */
 .skills-stars[data-rating='2'] li:nth-child(-n + 2) svg,
 .skills-stars[data-rating='3'] li:nth-child(-n + 3) svg,
@@ -353,7 +358,6 @@ main {
   margin-bottom: var(--gap-sm);
   /* Scales up to 40px */
   width: 100%;
-  ;
 }
 
 .project-figcaption {
@@ -405,12 +409,15 @@ main {
   color: var(--light-text-color);
   font-size: var(--font-sm);
   font-weight: 700;
-  transition: background-color var(--transition-speed), transform var(--transition-speed);
+  transition:
+    background-color var(--transition-speed),
+    transform var(--transition-speed);
 }
 
 .footer-send-btn:hover {
   background-color: var(--gray-bg-color);
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .footer-social-links {
@@ -420,13 +427,16 @@ main {
   /* Scales up to 50px */
 }
 
-.footer-social-links a {
-  transition: transform var(--transition-speed), color var(--transition-speed);
+.footer-social-links svg {
+  color: var(--dark-text-color);
+  transition:
+    transform var(--transition-speed),
+    opacity var(--transition-speed);
 }
 
-.footer-social-links a:hover {
-  transform: scale(1.1);
-  color: var(--gray-bg-color);
+.footer-social-links svg:hover {
+  transform: scale(1.05);
+  opacity: 0.5;
 }
 
 /* Override hardcoded social SVG sizes dynamically */
@@ -434,7 +444,6 @@ main {
   width: clamp(26px, 4cqw, 40px);
   height: clamp(26px, 4cqw, 40px);
 }
-
 
 .footer-copyright {
   font-size: var(--font-xs);
